@@ -5,10 +5,10 @@ On July 2, an alien mothership entered Earth's orbit and deployed several dozen 
 
 On July 3, the Black Knights, a squadron of Marine Corps F/A-18 Hornets, participated in an assault on a destroyer near the city of Los Angeles.
 
-# The largest heading (an <h1> tag)
-## The second largest heading (an <h2> tag)
+# The largest heading
+## The second largest heading
 …
-###### The 6th largest heading (an <h6> tag)
+###### The 6th largest heading
 
 In the words of Abraham Lincoln:
 
