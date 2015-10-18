@@ -4,37 +4,33 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["アルドノア",
-                   "さばげぶっ！",
-                   "魔法科高校の劣等生",
-                   "ソノ黒キ鋼",
-                   "ハマトラ",
-                   "月刊少女野崎くん",
-                   "Ｆｒｅｅ！",
-                   "グラスリップ",
-                   "キャプテン・アース",
-                   "白銀の意思",
-                   "東京喰種",
-                   "ＲＡＩＬ　ＷＡＲＳ！",
-                   "ＲＡＩＬ ＷＡＲＳ！",
-                   "普通の女子校生が",
-                   "六畳間の侵略者",
-                   "少年ハリウッド",
-                   "ばらかもん",
-                   "人生相談",
-                   "アカメが斬る",
-                   "アオハライド",
-                   "ハナヤマタ",
-                   "ＤＲＡＭＡｔｉｃａｌ",
-                   "まじもじるるも",
-                   "残響のテロル",
-                   "ＰＳＹＣＨＯ－ＰＡＳＳ",
-                   "東京ＥＳＰ",
-                   "精霊使いの剣舞",
+animetitle_long = ["終物語",
+                   "ゆるゆり",
+                   "ルパン三世",
+                   "シュタインズ",
+                   "うたわれるもの",
+                   "アイドルマスター",
+                   "落第騎士の英雄譚",
+                   "すべてがＦになる",
+                   "俺がお嬢様学校に",
+                   "アクエリオンロゴス",
+                   "掟上今日子の備忘録",
+                   "金田一少年の事件簿",
+                   "ヘヴィーオブジェクト",
+                   "学戦都市アスタリスク",
+                   "コメット・ルシファー",
+                   "ご注文はうさぎですか",
+                   "対魔導学園３５試験小隊",
+                   "ランス・アンド・マスクス",
+                   "コンクリート・レボルティオ",
+                   "ウルトラスーパーアニメタイム",
+                   "櫻子さんの足下には死体が埋まっている",
                   ]
 
-animetitle_short = ["ひめゴト",
-                    "闇芝居",
+animetitle_short = ["ＪＫめし",
+                    "あにトレ",
+                    "小森さんは断れない",
+                    "探偵チームＫＺ事件ノート",
                     ]
 
 animetitle = animetitle_long + animetitle_short
@@ -97,7 +93,8 @@ for title in animetitle:
 for title in animetitle_long:
     for file in os.listdir():
         if re.search(title+".*\.ts",file):
-            os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
+            #os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
+            pass
 
 for title in animetitle_long:
     for file in os.listdir():
@@ -113,12 +110,12 @@ for title in animetitle:
     if existHDST(title):
         for file in os.listdir():
             if re.search(title+".*HD(-\d)?\.ts",file):
-                if open(file.split('_')[0]+'.txt', 'r').readline() in utf:
+                if open(file.split('_')[0]+'.txt', 'r', errors='ignore').readline() in utf:
                     shutil.move(file,"UTF\\"+title)
                 else:
                     shutil.move(file,"BS\\"+title)
             elif re.search(title+".*\.ts",file):
-                if open(file.split('.')[0]+'.txt', 'r').readline() in utf:
+                if open(file.split('.')[0]+'.txt', 'r', errors='ignore').readline() in utf:
                     shutil.move(file,"UTF\\"+title)
                 else:
                     shutil.move(file,"BS\\"+title)
@@ -171,3 +168,4 @@ for title in animetitle:
         print("copying %d/%d" % (copyed_num,uncopyed_num))
         print(uncopyed)
         shutil.copy("D:\\animeonair\\BS\\"+title+"\\"+uncopyed,"F:\\animebackup\\BS\\"+title)
+
