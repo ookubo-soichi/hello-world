@@ -4,33 +4,40 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["終物語",
-                   "ゆるゆり",
+animetitle_long = ["亜人",
+                   "霊剣山",
+                   "ＧＡＴＥ",
+                   "ハルチカ",
+                   "ブランキ",
                    "ルパン三世",
-                   "シュタインズ",
+                   "だがしかし",
+                   "デュラララ",
                    "うたわれるもの",
+                   "紅殻のパンドラ",
                    "アイドルマスター",
-                   "落第騎士の英雄譚",
-                   "すべてがＦになる",
-                   "俺がお嬢様学校に",
+                   "アクティヴレイド",
+                   "僕だけがいない街",
+                   "ラクエンロジック",
                    "アクエリオンロゴス",
-                   "掟上今日子の備忘録",
+                   "Ｄｉｍｅｎｓｉｏｎ",
+                   "最弱無敗の神装機竜",
+                   "無彩限のファントム",
                    "金田一少年の事件簿",
                    "ヘヴィーオブジェクト",
-                   "学戦都市アスタリスク",
-                   "コメット・ルシファー",
-                   "ご注文はうさぎですか",
-                   "対魔導学園３５試験小隊",
-                   "ランス・アンド・マスクス",
-                   "コンクリート・レボルティオ",
+                   "灰と幻想のグリムガル",
+                   "少女たちは荒野を目指す",
+                   "蒼の彼方のフォーリズム",
+                   "シュヴァルツェスマーケン",
+                   "この素晴らしい世界に祝福を",
                    "ウルトラスーパーアニメタイム",
-                   "櫻子さんの足下には死体が埋まっている",
                   ]
 
-animetitle_short = ["ＪＫめし",
-                    "あにトレ",
-                    "小森さんは断れない",
+animetitle_short = ["闇芝居",
+                    "ＪＫめし",
+                    "虹色デイズ",
+                    "大家さんは思春期",
                     "探偵チームＫＺ事件ノート",
+                    "魔法少女なんてもういいですから",
                     ]
 
 animetitle = animetitle_long + animetitle_short
@@ -93,7 +100,7 @@ for title in animetitle:
 for title in animetitle_long:
     for file in os.listdir():
         if re.search(title+".*\.ts",file):
-            #os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
+            os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
             pass
 
 for title in animetitle_long:
