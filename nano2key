@@ -1,0 +1,202 @@
+#!/usr/bin/env python
+import sys
+import os
+import pygame
+import pygame.midi
+from pygame.locals import *
+
+import pyautogui as pa
+
+# display a list of MIDI devices connected to the computer
+def print_device_info():
+    for i in range( pygame.midi.get_count() ):
+        r = pygame.midi.get_device_info(i)
+        (interf, name, input, output, opened) = r
+        in_out = ""
+        if input:
+            in_out = "(input)"
+        if output:
+            in_out = "(output)"
+        print ("%2i: interface: %s, name: %s, opened: %s %s" %
+               (i, interf, name, opened, in_out))
+pygame.init()
+pygame.fastevent.init()
+event_get = pygame.fastevent.get
+event_post = pygame.fastevent.post
+pygame.midi.init()
+print ("Available MIDI devices:")
+print_device_info();
+# Change this to override use of default input device
+device_id = None
+if device_id is None:
+    input_id = pygame.midi.get_default_input_id()
+else:
+    input_id = device_id
+print ("Using input_id: %s" % input_id)
+i = pygame.midi.Input( input_id )
+print ("Logging started:")
+going = True
+
+isSet = False
+ch1 = [0,0,0,0,0,0,0,0]
+
+while going:
+    events = event_get()
+    for e in events:
+        if e.type in [QUIT]:
+            going = False
+        if e.type in [KEYDOWN]:
+            going = False
+        if e.type in [pygame.midi.MIDIIN]:
+            # print information to console
+            print ("Timestamp: " + str(e.timestamp) + "ms, Channel: " + str(e.data1) + ", Value: " + str(e.data2)+", set "+str(isSet))
+            # Hot-Key
+            # Start / Pause
+            if e.data1 == 41 and e.data2 == 127:
+                pa.press(' ')
+            # Full Screen
+            if e.data1 == 42 and e.data2 == 127:
+                pa.press('f')
+            # Variable Skip
+            for ich in range(len(ch1)):
+                if e.data1 == ich:
+                    ch1[ich] = e.data2
+            # CM(1min-) Skip
+            if e.data1 == 45 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.press('pagedown')
+            # Next
+            if e.data1 == 44 and e.data2 == 127:
+                pa.press('n')
+            # Previous
+            if e.data1 == 43 and e.data2 == 127:
+                pa.press('p')
+            # isSet
+            if e.data1 == 60:
+                if e.data2 == 127:
+                    isSet = True
+                else:
+                    isSet = False
+            # Faster
+            if e.data1 == 62 and e.data2 == 127:
+                if isSet:
+                    pa.press(']')
+                else:
+                    pa.press(';')
+            # Slower
+            if e.data1 == 61 and e.data2 == 127:
+                if isSet:
+                    pa.press('[')
+                else:
+                    pa.press('-')
+            # Volume Up
+            if e.data1 == 59 and e.data2 == 127:
+                pa.hotkey('ctrl', 'up')
+            # Volume Down
+            if e.data1 == 58 and e.data2 == 127:
+                pa.hotkey('ctrl', 'down')
+            # x1.0
+            if e.data1 == 64 and e.data2 == 127:
+                pa.press('u')
+            # x1.5
+            if e.data1 == 48 and e.data2 == 127:
+                pa.press('u')
+                pa.press(';')
+            # x2.1
+            if e.data1 == 32 and e.data2 == 127:
+                pa.press('u')
+                pa.press(';')
+                pa.press(';')
+                pa.press(']')
+            # x2.3
+            if e.data1 == 65 and e.data2 == 127:
+                pa.press('u')
+                pa.press(';')
+                pa.press(';')
+                pa.press(']')
+                pa.press(']')
+                pa.press(']')
+            # x2.5
+            if e.data1 == 49 and e.data2 == 127:
+                pa.press('u')
+                pa.press(';')
+                pa.press(';')
+                pa.press(']')
+                pa.press(']')
+                pa.press(']')
+                pa.press(']')
+                pa.press(']')
+            # x2.8
+            if e.data1 == 33 and e.data2 == 127:
+                pa.press('u')
+                pa.press(';')
+                pa.press(';')
+                pa.press(';')
+                pa.press('[')
+                pa.press('[')
+            # 10 sec before
+            if e.data1 == 66 and e.data2 == 127:
+                pa.hotkey('alt', 'left')
+            # 10 sec after
+            if e.data1 == 50 and e.data2 == 127:
+                pa.hotkey('ctrl', 'left')
+            # 1min before
+            if e.data1 == 67 and e.data2 == 127:
+                pa.hotkey('alt', 'right')
+            # 1min after
+            if e.data1 == 51 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+            # configureble after
+            # 2.5min after (more)
+            if e.data1 == 68 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.press('pageup')
+                pa.press('pageup')
+            # 1min after (less)
+            if e.data1 == 52 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.press('pagedown')
+                pa.press('pagedown')
+            # 1.5min after (less)
+            if e.data1 == 36 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.press('pagedown')
+                pa.press('pagedown')
+            # configureble after2
+            # 1.5min after (less)
+            if e.data1 == 69 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.press('pagedown')
+                pa.press('pagedown')
+            # 2min after (less)
+            if e.data1 == 53 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('ctrl', 'right')
+                pa.press('pagedown')
+                pa.press('pagedown')
+            # 2.5min after (less)
+            if e.data1 == 37 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('ctrl', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.hotkey('alt', 'right')
+                pa.press('pagedown')
+                pa.press('pagedown')
+
+    # if there are new data from the MIDI controller
+    if i.poll():
+        midi_events = i.read(10)
+        midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
+        for m_e in midi_evs:
+            event_post( m_e )
