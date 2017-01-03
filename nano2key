@@ -6,9 +6,6 @@ import pygame.midi
 from pygame.locals import *
 import pyautogui as pa
 
-min_to_skip = [3.5, 2.0, 2.5]
-tune_param = ['--', '--', '-']
-
 cycle_time = [3.5, 2.0]
 cycle_tune = ['--', '--']
 cycle_index = 0
@@ -142,35 +139,24 @@ while going:
             if e.data1 == 46 and e.data2 == 127:
                 pa.hotkey('alt', 'f4')
 
-            # Configureble Time Skip
-            if e.data1 == 64 and e.data2 == 127:
-                skip_time(min_to_skip[0])
-                skip_tune(tune_param[0])
-            if e.data1 == 48 and e.data2 == 127:
-                skip_time(min_to_skip[1])
-                skip_tune(tune_param[1])
-            if e.data1 == 32 and e.data2 == 127:
-                skip_time(min_to_skip[2])
-                skip_tune(tune_param[2])
-
             # Skip Time Setting
             # 3 sec before
-            if e.data1 == 65 and e.data2 == 127:
+            if e.data1 == 64 and e.data2 == 127:
                 pa.press('pagedown')
             # 3 sec after
-            if e.data1 == 66 and e.data2 == 127:
+            if e.data1 == 65 and e.data2 == 127:
                 pa.press('pageup')
             # 10 sec before
-            if e.data1 == 49 and e.data2 == 127:
+            if e.data1 == 48 and e.data2 == 127:
                 pa.hotkey('alt', 'left')
             # 10 sec after
-            if e.data1 == 50 and e.data2 == 127:
+            if e.data1 == 49 and e.data2 == 127:
                 pa.hotkey('alt', 'right')
             # 1min before
-            if e.data1 == 33 and e.data2 == 127:
+            if e.data1 == 32 and e.data2 == 127:
                 pa.hotkey('ctrl', 'left')
             # 1min after
-            if e.data1 == 34 and e.data2 == 127:
+            if e.data1 == 33 and e.data2 == 127:
                 pa.hotkey('ctrl', 'right')
 
             # Speed Settings
