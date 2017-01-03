@@ -6,8 +6,12 @@ import pygame.midi
 from pygame.locals import *
 import pyautogui as pa
 
-min_to_skip = [1.5, 2.0, 2.5]
-tune_param = ['--', '-', '-']
+min_to_skip = [3.5, 2.0, 2.5]
+tune_param = ['--', '--', '-']
+
+cycle_time = [3.5, 2.0]
+cycle_tune = ['--', '--']
+cycle_index = 0
 
 # display a list of MIDI devices connected to the computer
 def print_device_info():
@@ -57,7 +61,7 @@ def skip_time(x):
         one_min_after()
     for i in range(sec):
         ten_sec_after()
-def fine_tune(x):
+def skip_tune(x):
     if x == '--':
         pa.press('pagedown')
         pa.press('pagedown')
@@ -70,6 +74,14 @@ def fine_tune(x):
         pa.press('pageup')
     else:
         pass
+
+def cycle_skip():
+    global cycle_index
+    skip_time(cycle_time[cycle_index])
+    skip_tune(cycle_tune[cycle_index])
+    cycle_index = cycle_index+1
+    if cycle_index >= len(cycle_time):
+        cycle_index = 0
 
 while going:
     events = event_get()
@@ -93,10 +105,9 @@ while going:
             for ich in range(len(ch1)):
                 if e.data1 == ich:
                     ch1[ich] = e.data2
-            # CM(1min-) Skip
+            # Cycle Skip
             if e.data1 == 45 and e.data2 == 127:
-                skip_time(1.0)
-                pa.press('pagedown')
+                cycle_skip()
             # Next
             if e.data1 == 44 and e.data2 == 127:
                 pa.press('n')
@@ -134,13 +145,13 @@ while going:
             # Configureble Time Skip
             if e.data1 == 64 and e.data2 == 127:
                 skip_time(min_to_skip[0])
-                fine_tune(tune_param[0])
+                skip_tune(tune_param[0])
             if e.data1 == 48 and e.data2 == 127:
                 skip_time(min_to_skip[1])
-                fine_tune(tune_param[0])
+                skip_tune(tune_param[1])
             if e.data1 == 32 and e.data2 == 127:
                 skip_time(min_to_skip[2])
-                fine_tune(tune_param[0])
+                skip_tune(tune_param[2])
 
             # Skip Time Setting
             # 3 sec before
