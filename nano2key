@@ -6,7 +6,8 @@ import pygame.midi
 from pygame.locals import *
 import pyautogui as pa
 
-min_to_skip = [0.0, 0.0, 0.0]
+min_to_skip = [1.5, 2.0, 2.5]
+tune_param = ['--', '-', '-']
 
 # display a list of MIDI devices connected to the computer
 def print_device_info():
@@ -56,6 +57,19 @@ def skip_time(x):
         one_min_after()
     for i in range(sec):
         ten_sec_after()
+def fine_tune(x):
+    if x == '--':
+        pa.press(pagedown)
+        pa.press(pagedown)
+    elif x == '-':
+        pa.press(pagedown)
+    elif x == '++':
+        pa.press(pageup)
+        pa.press(pageup)
+    elif x == '+':
+        pa.press(pageup)
+    else:
+        pass
 
 while going:
     events = event_get()
@@ -67,6 +81,7 @@ while going:
         if e.type in [pygame.midi.MIDIIN]:
             # print information to console
             print ("Timestamp: " + str(e.timestamp) + "ms, Channel: " + str(e.data1) + ", Value: " + str(e.data2)+", set "+str(isSet))
+
             # Hot-Key
             # Start / Pause
             if e.data1 == 41 and e.data2 == 127:
@@ -116,22 +131,53 @@ while going:
             if e.data1 == 46 and e.data2 == 127:
                 pa.hotkey('alt', 'f4')
 
+            # Configureble Time Skip
+            if e.data1 == 64 and e.data2 == 127:
+                skip_time(min_to_skip[0])
+                fine_tune(tune_param[0])
+            if e.data1 == 48 and e.data2 == 127:
+                skip_time(min_to_skip[1])
+                fine_tune(tune_param[0])
+            if e.data1 == 32 and e.data2 == 127:
+                skip_time(min_to_skip[2])
+                fine_tune(tune_param[0])
+
+            # Skip Time Setting
+            # 3 sec before
+            if e.data1 == 65 and e.data2 == 127:
+                pa.press('pagedown')
+            # 3 sec after
+            if e.data1 == 66 and e.data2 == 127:
+                pa.press('pageup')
+            # 10 sec before
+            if e.data1 == 49 and e.data2 == 127:
+                pa.hotkey('alt', 'left')
+            # 10 sec after
+            if e.data1 == 50 and e.data2 == 127:
+                pa.hotkey('alt', 'right')
+            # 1min before
+            if e.data1 == 33 and e.data2 == 127:
+                pa.hotkey('ctrl', 'left')
+            # 1min after
+            if e.data1 == 34 and e.data2 == 127:
+                pa.hotkey('ctrl', 'right')
+
             # Speed Settings
             # x1.0
-            if e.data1 == 64 and e.data2 == 127:
+            if e.data1 == 70 and e.data2 == 127:
                 pa.press('u')
             # x1.5
-            if e.data1 == 48 and e.data2 == 127:
+            if e.data1 == 54 and e.data2 == 127:
                 pa.press('u')
                 pa.press(';')
             # x2.1
-            if e.data1 == 32 and e.data2 == 127:
+            if e.data1 == 38 and e.data2 == 127:
                 pa.press('u')
                 pa.press(';')
                 pa.press(';')
                 pa.press(']')
             # x2.3
-            if e.data1 == 65 and e.data2 == 127:
+            if e.data1 == 71 and e.data2 == 127:
                 pa.press('u')
                 pa.press(';')
                 pa.press(';')
@@ -139,7 +185,7 @@ while going:
                 pa.press(']')
                 pa.press(']')
             # x2.5
-            if e.data1 == 49 and e.data2 == 127:
+            if e.data1 == 55 and e.data2 == 127:
                 pa.press('u')
                 pa.press(';')
                 pa.press(';')
@@ -149,7 +195,7 @@ while going:
                 pa.press(']')
                 pa.press(']')
             # x2.8
-            if e.data1 == 33 and e.data2 == 127:
+            if e.data1 == 39 and e.data2 == 127:
                 pa.press('u')
                 pa.press(';')
                 pa.press(';')
@@ -157,80 +203,10 @@ while going:
                 pa.press('[')
                 pa.press('[')
 
-            # Skip Time Setting
-            # 3 sec before
-            if e.data1 == 66 and e.data2 == 127:
-                pa.press('pagedown')
-            # 3 sec after
-            if e.data1 == 67 and e.data2 == 127:
-                pa.press('pageup')
-            # 10 sec before
-            if e.data1 == 50 and e.data2 == 127:
-                pa.hotkey('alt', 'left')
-            # 10 sec after
-            if e.data1 == 51 and e.data2 == 127:
-                pa.hotkey('alt', 'right')
-            # 1min before
-            if e.data1 == 34 and e.data2 == 127:
-                pa.hotkey('ctrl', 'left')
-            # 1min after
-            if e.data1 == 35 and e.data2 == 127:
-                pa.hotkey('ctrl', 'right')
-
-            # configureble after
-            # 2.5min after (more)
-            if e.data1 == 68 and e.data2 == 127:
-                # Skip OP or Not
-                if ch1[4] >= 64:
-                    skip_time(1.0)
-                else:
-                    skip_time(2.5)
-                pa.press('pageup')
-                pa.press('pageup')
-            # 1min after (less)
-            if e.data1 == 52 and e.data2 == 127:
-                skip_time(1)
-                pa.press('pagedown')
-                pa.press('pagedown')
-            # 1.5min after (less)
-            if e.data1 == 36 and e.data2 == 127:
-                skip_time(1.5)
-                pa.press('pagedown')
-                pa.press('pagedown')
-
-            # configureble after2
-            # 1.5min after (less)
-            if e.data1 == 69 and e.data2 == 127:
-                skip_time(1.5)
-                pa.press('pagedown')
-                pa.press('pagedown')
-            # 2min after (less)
-            if e.data1 == 53 and e.data2 == 127:
-                skip_time(2)
-                pa.press('pagedown')
-            # 2.5min after (less)
-            if e.data1 == 37 and e.data2 == 127:
-                skip_time(2.5)
-                pa.press('pagedown')
-                pa.press('pagedown')
-
-            # configureble after last
-            if e.data1 == 71 and e.data2 == 127:
-                skip_time(min_to_skip[0])
-                pa.press('pagedown')
-                pa.press('pagedown')
-            if e.data1 == 55 and e.data2 == 127:
-                skip_time(min_to_skip[1])
-                pa.press('pagedown')
-                pa.press('pagedown')
-            if e.data1 == 39 and e.data2 == 127:
-                skip_time(min_to_skip[2])
-                pa.press('pagedown')
-                pa.press('pagedown')
-
     # if there are new data from the MIDI controller
     if i.poll():
         midi_events = i.read(10)
         midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
         for m_e in midi_evs:
             event_post( m_e )
+            
