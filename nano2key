@@ -59,15 +59,15 @@ def skip_time(x):
         ten_sec_after()
 def fine_tune(x):
     if x == '--':
-        pa.press(pagedown)
-        pa.press(pagedown)
+        pa.press('pagedown')
+        pa.press('pagedown')
     elif x == '-':
-        pa.press(pagedown)
+        pa.press('pagedown')
     elif x == '++':
-        pa.press(pageup)
-        pa.press(pageup)
+        pa.press('pageup')
+        pa.press('pageup')
     elif x == '+':
-        pa.press(pageup)
+        pa.press('pageup')
     else:
         pass
 
@@ -95,7 +95,7 @@ while going:
                     ch1[ich] = e.data2
             # CM(1min-) Skip
             if e.data1 == 45 and e.data2 == 127:
-                pa.hotkey('ctrl', 'right')
+                skip_time(1.0)
                 pa.press('pagedown')
             # Next
             if e.data1 == 44 and e.data2 == 127:
