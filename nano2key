@@ -79,6 +79,9 @@ def cycle_skip():
     cycle_index = cycle_index+1
     if cycle_index >= len(cycle_time):
         cycle_index = 0
+def cycle_reset():
+    global cycle_index
+    cycle_index = 0
 
 while going:
     events = event_get()
@@ -89,7 +92,7 @@ while going:
             going = False
         if e.type in [pygame.midi.MIDIIN]:
             # print information to console
-            print ("Timestamp: " + str(e.timestamp) + "ms, Channel: " + str(e.data1) + ", Value: " + str(e.data2)+", set "+str(isSet))
+            print ("Timestamp: " + str(e.timestamp) + "ms, Channel: " + str(e.data1) + ", Value: " + str(e.data2)+", set "+str(isSet)+", ci "+str(cycle_index))
 
             # Hot-Key
             # Start / Pause
@@ -135,9 +138,9 @@ while going:
             # Volume Down
             if e.data1 == 58 and e.data2 == 127:
                 pa.hotkey('ctrl', 'down')
-            # Close
+            # Cycle Reset
             if e.data1 == 46 and e.data2 == 127:
-                pa.hotkey('alt', 'f4')
+                cycle_reset()
 
             # Skip Time Setting
             # 3 sec before
@@ -206,4 +209,3 @@ while going:
         midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
         for m_e in midi_evs:
             event_post( m_e )
-            
