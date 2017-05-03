@@ -4,30 +4,29 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["スクールガールストライカーズ",
+animetitle_long = ["ロクでなし魔術講師と禁忌教典",
                    "リトルウィッチアカデミア",
-                   "ガヴリールドロップアウト",
-                   "小林さんちのメイドラゴン",
-                   "新世紀エヴァンゲリオン",
-                   "南鎌倉高校女子自転車部",
-                   "亜人ちゃんは語りたい",
-                   "ＴＲＩＣＫＳＴＥＲ",
-                   "政宗くんのリベンジ",
-                   "チェインクロニクル",
-                   "タイムボカン２４",
-                   "ハンドシェイカー",
-                   "カオスチャイルド",
-                   "四畳半神話大系",
-                   "３月のライオン",
-                   "Ｒｅｗｒｉｔｅ",
-                   "うらら迷路帖",
-                   "ゼスティリア",
-                   "クズの本懐",
-                   "ＡＫＩＢＡ",
-                   "セイレン",
-                   "幼女戦記",
-                   "区監察課",
-                   "風夏",
+                   "冴えない彼女の育てかた",
+                   "ゼロから始める魔法の書",
+                   "終末なにしてますか",
+                   "サクラダリセット",
+                   "フレームアームズ",
+                   "ＣＲＥＡＴＯＲＳ",
+                   "マキャヴェリズム",
+                   "クロックワーク",
+                   "王室教師ハイネ",
+                   "サクラクエスト",
+                   "エロマンガ先生",
+                   "覆面系ノイズ",
+                   "アリスと蔵六",
+                   "ひなこのーと",
+                   "正解するカド",
+                   "月がきれい",
+                   "ビギニング",
+                   "カブキブ",
+                   "恋愛暴君",
+                   "つぐもも",
+                   "ＩＤ－０",
                   ]
 
 animetitle_short = []
@@ -98,7 +97,7 @@ for title in animetitle:
 for title in animetitle_long:
     for file in os.listdir():
         if re.search(title+".*\.ts",file):
-            #os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
+            os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
             pass
 
 for title in animetitle_long:
