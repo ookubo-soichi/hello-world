@@ -29,20 +29,20 @@ animetitle_short = ["アホガール",
 animetitle = animetitle_long + animetitle_short
 
 
-utf = ['チャンネル:ＴＯＫＹＯ\u3000ＭＸ１\n',
-       'チャンネル:テレビ東京１\n',
-       'チャンネル:ＴＢＳ１\n',
-       'チャンネル:日テレ１\n',
-       'チャンネル:フジテレビ\n',
-       'チャンネル:テレビ愛知１\n',
-       'チャンネル:中京テレビ１\n',
-       'チャンネル:ＣＢＣテレビ\n',
-       'チャンネル:東海テレビ０１１\n',
-       ]
+utf_chs = ['チャンネル:ＴＯＫＹＯ\u3000ＭＸ１\n',
+           'チャンネル:テレビ東京１\n',
+           'チャンネル:ＴＢＳ１\n',
+           'チャンネル:日テレ１\n',
+           'チャンネル:フジテレビ\n',
+           'チャンネル:テレビ愛知１\n',
+           'チャンネル:中京テレビ１\n',
+           'チャンネル:ＣＢＣテレビ\n',
+           'チャンネル:東海テレビ０１１\n',
+           ]
 
-bscs = ['チャンネル:ＢＳ１１\n',
-        'チャンネル:ＢＳアニマックス\n',
-        'チャンネル:ＢＳフジ・１８１\n',]
+bscs_chs = ['チャンネル:ＢＳ１１\n',
+            'チャンネル:ＢＳアニマックス\n',
+            'チャンネル:ＢＳフジ・１８１\n',]
 
 main_dir = "D:\\animeonair\\"
 backup_dir = "F:\\animebackup\\"
@@ -71,10 +71,9 @@ def error_or_drop(file):
     return is_error_or_drop
 
 for title in animetitle:
-    if not os.path.exists("UTF\\"+title):
-        os.mkdir("UTF\\"+title)
-    if not os.path.exists("BS\\"+title):
-        os.mkdir("BS\\"+title)
+    for d in [main_dir+bs, main_dir+utf, backup_dir+bs, backup_dir+utf]:
+        if not os.path.exists(d+title):
+            os.mkdir(d+title)
 
 if not os.path.exists("その他"):
     os.mkdir("その他")
@@ -114,12 +113,12 @@ for title in animetitle:
     if existHDST(title):
         for file in os.listdir():
             if re.search(title+".*HD(-\d)?.*\.ts",file):
-                if open(file.split('_')[0]+'.txt', 'r', errors='ignore').readline() in utf:
+                if open(file.split('_')[0]+'.txt', 'r', errors='ignore').readline() in utf_chs:
                     shutil.move(file,"UTF\\"+title)
                 else:
                     shutil.move(file,"BS\\"+title)
             elif re.search(title+".*\.ts",file):
-                if open(file.split('.')[0]+'.txt', 'r', errors='ignore').readline() in utf:
+                if open(file.split('.')[0]+'.txt', 'r', errors='ignore').readline() in utf_chs:
                     shutil.move(file,"UTF\\"+title)
                 else:
                     shutil.move(file,"BS\\"+title)
@@ -128,7 +127,7 @@ for title in animetitle:
     else:
         for file in os.listdir():
             if re.search(title+".*\.ts",file):
-                if open(file.split('.')[0]+'.txt', 'r', errors='ignore').readline() in utf:
+                if open(file.split('.')[0]+'.txt', 'r', errors='ignore').readline() in utf_chs:
                     shutil.move(file,"UTF\\"+title)
                 else:
                     shutil.move(file,"BS\\"+title)
@@ -144,41 +143,23 @@ for title in animetitle:
         if re.search(title+".*\.txt",file):
             dll.trash(file)
 
-for title in animetitle:
-    if not os.path.exists("F:\\animebackup\\UTF\\"+title):
-        os.mkdir("F:\\animebackup\\UTF\\"+title)
-    if not os.path.exists("F:\\animebackup\\BS\\"+title):
-        os.mkdir("F:\\animebackup\\BS\\"+title)
-
 uncopyed_num = 0
 copyed_num = 0
 
 for title in animetitle:
-    uncopyed_num += len(list(set(os.listdir("D:\\animeonair\\UTF\\"+title))
-                             -set(os.listdir("F:\\animebackup\\UTF\\"+title))))
-    uncopyed_num += len(list(set(os.listdir("D:\\animeonair\\BS\\"+title))
-                             -set(os.listdir("F:\\animebackup\\BS\\"+title))))
+    for ch in [bs, utf]:
+        uncopyed_num += len(list(set(os.listdir(main_dir+ch+title)) - set(os.listdir(backup_dir+ch+title))))        
 
 for title in animetitle:
-    for uncopyed in list(set(os.listdir("D:\\animeonair\\UTF\\"+title))
-                         -set(os.listdir("F:\\animebackup\\UTF\\"+title))):
-        copyed_num += 1
-        print("copying %d/%d" % (copyed_num,uncopyed_num))
-        print(uncopyed)
-        shutil.copy("D:\\animeonair\\UTF\\"+title+"\\"+uncopyed,"F:\\animebackup\\UTF\\"+title)
-    for uncopyed in list(set(os.listdir("D:\\animeonair\\BS\\"+title))
-                         -set(os.listdir("F:\\animebackup\\BS\\"+title))):
-        copyed_num += 1
-        print("copying %d/%d" % (copyed_num,uncopyed_num))
-        print(uncopyed)
-        shutil.copy("D:\\animeonair\\BS\\"+title+"\\"+uncopyed,"F:\\animebackup\\BS\\"+title)
+    for ch in [bs, utf]:
+        for uncopyed in list(set(os.listdir(main_dir+ch+title))-set(os.listdir(backup_dir+ch+title))):
+            copyed_num += 1
+            print("copying %d/%d" % (copyed_num,uncopyed_num))
+            print(uncopyed)
+            shutil.copy(main_dir+ch+title+"\\"+uncopyed,backup_dir+ch+title)
 
-
-
-anime_dir = [main_dir+bs, main_dir+utf, backup_dir+bs, backup_dir+utf]
-for d in anime_dir:
+for d in [main_dir+bs, main_dir+utf, backup_dir+bs, backup_dir+utf]:
     folders = [x for x in os.listdir(d) if os.path.isdir(d)]
     for f in folders:
         if os.listdir(d+f) == []:
             dll.trash(d+f)
-
