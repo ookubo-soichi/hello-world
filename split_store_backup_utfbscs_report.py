@@ -4,32 +4,27 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["ロクでなし魔術講師と禁忌教典",
-                   "リトルウィッチアカデミア",
-                   "冴えない彼女の育てかた",
-                   "ゼロから始める魔法の書",
-                   "終末なにしてますか",
+animetitle_long = ["リトルウィッチアカデミア",
+                   "Ａｐｏｃｒｙｐｈａ",
                    "サクラダリセット",
-                   "フレームアームズ",
                    "ＣＲＥＡＴＯＲＳ",
-                   "マキャヴェリズム",
-                   "クロックワーク",
-                   "王室教師ハイネ",
+                   "ナイツ＆マジック",
+                   "セントールの悩み",
                    "サクラクエスト",
-                   "エロマンガ先生",
+                   "妖怪アパート",
                    "覆面系ノイズ",
-                   "アリスと蔵六",
-                   "ひなこのーと",
                    "正解するカド",
+                   "バトルガール",
                    "月がきれい",
+                   "賭ケグルイ",
                    "ビギニング",
-                   "カブキブ",
-                   "恋愛暴君",
-                   "つぐもも",
-                   "ＩＤ－０",
+                   "潔癖男子",
+                   "恋と嘘",
                   ]
 
-animetitle_short = []
+animetitle_short = ["アホガール",
+                    "徒然チルドレン",
+                    "捏造トラップ",]
 
 animetitle = animetitle_long + animetitle_short
 
@@ -48,6 +43,11 @@ utf = ['チャンネル:ＴＯＫＹＯ\u3000ＭＸ１\n',
 bscs = ['チャンネル:ＢＳ１１\n',
         'チャンネル:ＢＳアニマックス\n',
         'チャンネル:ＢＳフジ・１８１\n',]
+
+main_dir = "D:\\animeonair\\"
+backup_dir = "F:\\animebackup\\"
+bs = "BS\\"
+utf = "UTF\\"
 
 def existHDST(title):
     for file in os.listdir():
@@ -97,7 +97,7 @@ for title in animetitle:
 for title in animetitle_long:
     for file in os.listdir():
         if re.search(title+".*\.ts",file):
-            os.system("TsSplitter -SD -1SEG -SEP2 -SEPA "+file)
+            os.system('TsSplitter -SD -1SEG -SEP2 -SEPA "'+file+'"')
             pass
 
 for title in animetitle_long:
@@ -107,7 +107,7 @@ for title in animetitle_long:
 
 for title in animetitle:
     for file in os.listdir():
-        if re.search(title+".*HD(-\d)?\.ts",file):
+        if re.search(title+".*HD(-\d)?.*\.ts",file):
             dll.trash(file.split('_')[0]+'.ts')
 
 for title in animetitle:
@@ -172,3 +172,13 @@ for title in animetitle:
         print("copying %d/%d" % (copyed_num,uncopyed_num))
         print(uncopyed)
         shutil.copy("D:\\animeonair\\BS\\"+title+"\\"+uncopyed,"F:\\animebackup\\BS\\"+title)
+
+
+
+anime_dir = [main_dir+bs, main_dir+utf, backup_dir+bs, backup_dir+utf]
+for d in anime_dir:
+    folders = [x for x in os.listdir(d) if os.path.isdir(d)]
+    for f in folders:
+        if os.listdir(d+f) == []:
+            dll.trash(d+f)
+
