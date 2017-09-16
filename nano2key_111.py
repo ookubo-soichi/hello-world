@@ -18,7 +18,7 @@ cycle_index = 0
 
 def set_cycle_time(cml=[1.0, 1.0, 1.0], ops=True, eds=True, lcms=True):
     # CM Length (min)
-    result = cml
+    result = cml[:]
     # OP Skip
     if ops:
         result[0] = result[0]+1.5
@@ -124,7 +124,7 @@ while going:
             going = False
         if e.type in [pygame.midi.MIDIIN]:
             # print information to console
-            print ("Timestamp: " + str(e.timestamp) + "ms, Channel: " + str(e.data1) + ", Value: " + str(e.data2)+", set "+str(isSet)+", ci "+str(cycle_index)+str(isFrame))
+            print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time)
 
             # Hot-Key
             # Start / Pause
@@ -296,6 +296,37 @@ while going:
                 else:
                     isFrame = False
 
+            #Not OP Skip
+            if e.data1 == 16:
+                if e.data2 == 127:
+                    this_ops = False
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    this_ops = True
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+            #Not ED Skip
+            if e.data1 == 17:
+                if e.data2 == 127:
+                    this_eds = False
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    this_eds = True
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+            #Not LastCM Skip
+            if e.data1 == 18:
+                if e.data2 == 127:
+                    this_lcms = False
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    this_lcms = True
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)                    
+            #Full Screen at Next Chapter Flag
+            if e.data1 == 23:
+                if e.data2 == 127:
+                    fs_flag = True
+                elif e.data2 == 0:
+                    fs_flag = False
+                    
     # if there are new data from the MIDI controller
     if i.poll():
         midi_events = i.read(10)
