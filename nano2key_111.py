@@ -70,8 +70,8 @@ print ("Logging started:")
 going = True
 
 isSet = False
-ch1 = [0,0,0,0,0,0,0,0]
-ch1_bin = [0,0,0,0,0,0,0,0]
+slider = [0,0,0,0,0,0,0,0]
+next_chapter_skip = [0,0,0,0,0,0,0,0]
 
 isFrame = False
 
@@ -124,7 +124,7 @@ while going:
             going = False
         if e.type in [pygame.midi.MIDIIN]:
             # print information to console
-            print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time)
+            print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time,sum(next_chapter_skip))
 
             # Hot-Key
             # Start / Pause
@@ -134,13 +134,12 @@ while going:
             if e.data1 == 42 and e.data2 == 127:
                 pa.press('f')
             # Variable Skip
-            for ich in range(len(ch1)):
+            for ich in range(len(slider)):
                 if e.data1 == ich:
-                    ch1[ich] = e.data2
-                    if ch1[ich] >= 60:
-                        ch1_bin[ich] = 1
+                    if e.data2 == 127:
+                        next_chapter_skip[ich] = 1
                     else:
-                        ch1_bin[ich] = 0
+                        next_chapter_skip[ich] = 0
             # Cycle Skip
             if e.data1 == 45 and e.data2 == 127:
                 if isSet:
@@ -153,7 +152,7 @@ while going:
                 pa.press('n')
                 if fs_flag:
                     pa.press('f')
-                skip_tune('+'*sum(ch1_bin))
+                skip_tune('+'*sum(next_chapter_skip))
                 cycle_reset()
             # Previous
             if e.data1 == 43 and e.data2 == 127:
@@ -320,6 +319,38 @@ while going:
                 elif e.data2 == 0:
                     this_lcms = True
                     cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)                    
+            #No CM after OP
+            if e.data1 == 19:
+                if e.data2 == 127:
+                    cm_length[0] = 0.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    cm_length[0] = 1.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+            #1.5 min CM after OP
+            if e.data1 == 20:
+                if e.data2 == 127:
+                    cm_length[0] = 1.5
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    cm_length[0] = 1.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+            #1.5 min Mid CM
+            if e.data1 == 21:
+                if e.data2 == 127:
+                    cm_length[1] = 1.5
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    cm_length[1] = 1.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)   
+            #2 min Mid CM
+            if e.data1 == 22:
+                if e.data2 == 127:
+                    cm_length[1] = 2.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
+                elif e.data2 == 0:
+                    cm_length[1] = 1.0
+                    cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)  
             #Full Screen at Next Chapter Flag
             if e.data1 == 23:
                 if e.data2 == 127:
