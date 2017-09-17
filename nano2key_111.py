@@ -8,6 +8,7 @@ import pyautogui as pa
 
 cm_length = [1.0, 1.0, 1.0]
 cycle_tune = ['+', '-', '-']
+orig_cycle_tune = cycle_tune[:]
 
 this_ops=True   # OP Skip
 this_eds=True   # ED Skip
@@ -124,7 +125,7 @@ while going:
             going = False
         if e.type in [pygame.midi.MIDIIN]:
             # print information to console
-            print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time,sum(next_chapter_skip))
+            # print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time,sum(next_chapter_skip))
 
             # Hot-Key
             # Start / Pause
@@ -187,6 +188,7 @@ while going:
             # Cycle Reset
             if e.data1 == 46 and e.data2 == 127:
                 cycle_reset()
+                cycle_tune = orig_cycle_tune
 
             # Skip Time Setting
             # 3 sec before
@@ -285,8 +287,8 @@ while going:
                 pa.press('[')
                 pa.press('[')
 
-            # Next Frame
-            if e.data1 == 69 and e.data2 == 127:
+            # Next Framee
+            if e.data1 == 52 and e.data2 == 127:
                 pa.press('e')
             # Frame by Frame
             if e.data1 == 53:
@@ -357,6 +359,60 @@ while going:
                     fs_flag = True
                 elif e.data2 == 0:
                     fs_flag = False
+
+            # OP tune +
+            if e.data1 == 36 and e.data2 == 127:
+                if cycle_tune[0].find('-') != -1:
+                    pindex = cycle_tune[0].find('-')
+                    cycle_tune[0] = cycle_tune[0][:pindex]+cycle_tune[0][pindex+1:]
+                else:
+                    cycle_tune[0]+='+'
+            # Op tune -
+            if e.data1 == 68 and e.data2 == 127:
+                if cycle_tune[0].find('+') != -1:
+                    pindex = cycle_tune[0].find('+')
+                    cycle_tune[0] = cycle_tune[0][:pindex]+cycle_tune[0][pindex+1:]
+                else:
+                    cycle_tune[0]+='-'
+
+            # OP tune +
+            if e.data1 == 37 and e.data2 == 127:
+                if cycle_tune[1].find('-') != -1:
+                    pindex = cycle_tune[1].find('-')
+                    cycle_tune[1] = cycle_tune[1][:pindex]+cycle_tune[1][pindex+1:]
+                else:
+                    cycle_tune[1]+='+'
+            # Op tune -
+            if e.data1 == 69 and e.data2 == 127:
+                if cycle_tune[1].find('+') != -1:
+                    pindex = cycle_tune[0].find('+')
+                    cycle_tune[1] = cycle_tune[1][:pindex]+cycle_tune[1][pindex+1:]
+                else:
+                    cycle_tune[1]+='-'
+
+            output = str(cm_length[0])+cycle_tune[0]+', '+str(cm_length[1])+cycle_tune[1]+', '+str(cm_length[2])+cycle_tune[2]
+            print (output)
+            output = "OP:"
+            if this_ops:
+                output += "Skip"
+            else:
+                output += "Not Skip"
+            print (output)
+            output = "ED:"
+            if this_eds:
+                if this_lcms:
+                    output += "Skip(with CM) "
+                else:
+                    output += "Skip(only ED) "
+            else:
+                if this_lcms:
+                    output += "CM Skip Only(No ED Skip) "
+                else:
+                    output += "Not Skip ED nor CM "
+            print (output)
+            if fs_flag:
+                print ("Toggle-Full-Screen")
+            print ("")
                     
     # if there are new data from the MIDI controller
     if i.poll():
