@@ -49,6 +49,42 @@ def print_device_info():
         print ("%2i: interface: %s, name: %s, opened: %s %s" %
                (i, interf, name, opened, in_out))
 
+def print_config():
+    output = str(cm_length[0])+cycle_tune[0]+', '+str(cm_length[1])+cycle_tune[1]+', '+str(cm_length[2])+cycle_tune[2]
+    print (output)
+    output = "OP:"
+    if this_ops:
+        output += "Skip"
+    else:
+        output += "Not Skip"
+    print (output)
+    output = "ED:"
+    if this_eds:
+        if this_lcms:
+            output += "Skip(with CM) "
+        else:
+            output += "Skip(only ED) "
+    else:
+        if this_lcms:
+            output += "CM Skip Only(No ED Skip) "
+        else:
+            output += "Not Skip ED nor CM "
+    print (output)
+    if fs_flag:
+        print ("Toggle-Full-Screen")
+    print ("")
+
+def print_usage():
+    print('')
+    print('---------------------------------------------------------------------------')
+    print('|NoOP-Skip|NoED-Skip|OnlyED-Skip| OP-CM-0  |OP-CM-1.5|Mid-CM-1.5|Mid-CM-2 |')
+    print('|  1m-ago | 1m-later|1.27-later |2.57-later|OP-Skip+ | CM-Skip+ |x2.1|x2.8|')
+    print('| 10s-ago |10s-later|0.57-later |2.27-later|  Flame  |Flame-Flow|x1.5|x2.5|')
+    print('|  3s-ago | 3s-later|0.27-later |1.57-later|OP-Skip- | CM-Skip- |x1.0|x2.3|')
+    print('---------------------------------------------------------------------------')
+    print('')
+    
+
 pygame.init()
 pygame.fastevent.init()
 event_get = pygame.fastevent.get
@@ -68,6 +104,9 @@ print ("Using input_id: %s" % input_id)
 i = pygame.midi.Input( input_id )
 
 print ("Logging started:")
+print_usage()
+print_config()
+
 going = True
 
 isSet = False
@@ -165,7 +204,8 @@ while going:
                 if e.data2 == 127:
                     isSet = True
                 else:
-                    isSet = False 
+                    isSet = False
+                    print_usage()
             # Faster
             if e.data1 == 62 and e.data2 == 127:
                 if isSet:
@@ -367,7 +407,7 @@ while going:
                     cycle_tune[0] = cycle_tune[0][:pindex]+cycle_tune[0][pindex+1:]
                 else:
                     cycle_tune[0]+='+'
-            # Op tune -
+            # OP tune -
             if e.data1 == 68 and e.data2 == 127:
                 if cycle_tune[0].find('+') != -1:
                     pindex = cycle_tune[0].find('+')
@@ -375,44 +415,21 @@ while going:
                 else:
                     cycle_tune[0]+='-'
 
-            # OP tune +
+            # CM tune +
             if e.data1 == 37 and e.data2 == 127:
                 if cycle_tune[1].find('-') != -1:
                     pindex = cycle_tune[1].find('-')
                     cycle_tune[1] = cycle_tune[1][:pindex]+cycle_tune[1][pindex+1:]
                 else:
                     cycle_tune[1]+='+'
-            # Op tune -
+            # CM tune -
             if e.data1 == 69 and e.data2 == 127:
                 if cycle_tune[1].find('+') != -1:
                     pindex = cycle_tune[0].find('+')
                     cycle_tune[1] = cycle_tune[1][:pindex]+cycle_tune[1][pindex+1:]
                 else:
                     cycle_tune[1]+='-'
-
-            output = str(cm_length[0])+cycle_tune[0]+', '+str(cm_length[1])+cycle_tune[1]+', '+str(cm_length[2])+cycle_tune[2]
-            print (output)
-            output = "OP:"
-            if this_ops:
-                output += "Skip"
-            else:
-                output += "Not Skip"
-            print (output)
-            output = "ED:"
-            if this_eds:
-                if this_lcms:
-                    output += "Skip(with CM) "
-                else:
-                    output += "Skip(only ED) "
-            else:
-                if this_lcms:
-                    output += "CM Skip Only(No ED Skip) "
-                else:
-                    output += "Not Skip ED nor CM "
-            print (output)
-            if fs_flag:
-                print ("Toggle-Full-Screen")
-            print ("")
+            print_config()
                     
     # if there are new data from the MIDI controller
     if i.poll():
