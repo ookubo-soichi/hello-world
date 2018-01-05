@@ -4,43 +4,19 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["異世界はスマートフォンとともに",
-                   "ようこそ実力至上主義の教室へ",
-                   "プリンセス・プリンシパル",
-                   "ボールルームへようこそ",
-                   "Ａｐｏｃｒｙｐｈａ",
-                   "アクションヒロイン",
-                   "バチカン奇跡調査官",
-                   "サクラダリセット",
-                   "ＣＲＥＡＴＯＲＳ",
-                   "ナイツ＆マジック",
-                   "メイドインアビス",
-                   "将国のアルタイル",
-                   "セントールの悩み",
-                   "サクラクエスト",
-                   "コンビニカレシ",
-                   "妖怪アパート",
-                   "バトルガール",
-                   "時間の支配者",
-                   "異世界食堂",
-                   "月がきれい",
-                   "賭ケグルイ",
-                   "ビギニング",
-                   "天使の３Ｐ",
-                   "ゲーマーズ",
-                   "地獄少女",
-                   "潔癖男子",
-                   "ＧＡＭＥ",
-                   "ＤＩＶＥ",
-                   "１８ｉｆ",
-                   "恋と嘘",
+animetitle_long = ["ラーメン大好き小泉さん",
+                   "結城友奈は勇者である",
+                   "ブラッククローバー",
+                   "宇宙よりも遠い場所",
+                   "スロウスタート",
+                   "３月のライオン",
+                   "魔法使いの嫁",
+                   "ゆるキャン",
+                   "牙狼",
                   ]
 
-animetitle_short = ["アホガール",
-                    "徒然チルドレン",
-                    "捏造トラップ",
-                    ]
-
+animetitle_long = list(set(animetitle_long))
+animetitle_short = []
 animetitle = list(set(animetitle_long + animetitle_short))
 
 utf_chs = ['チャンネル:ＴＯＫＹＯ\u3000ＭＸ１\n',
@@ -125,6 +101,13 @@ for title in animetitle:
     for file in os.listdir():
         if re.search(title+".*HD(-\d)?.*\.ts",file):
             dll.trash(file.split('_')[0]+'.ts')
+
+for title in animetitle_long:
+    for file in os.listdir():
+        if re.search(title+".*\.ts",file) and 2.5 * (1000 ** 3) > os.path.getsize(file):
+            print("Warning : File Size is Small")
+            print(file)
+            print("End of Warning")
 
 for title in animetitle:
     if existHDST(title):
