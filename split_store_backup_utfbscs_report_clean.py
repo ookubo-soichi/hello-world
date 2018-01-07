@@ -4,19 +4,37 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["ラーメン大好き小泉さん",
-                   "結城友奈は勇者である",
+animetitle_long = ["デスマーチからはじまる異世界狂想曲",
+                   "ヴァイオレット・エヴァーガーデン",
+                   "ダーリン・イン・ザ・フランキス",
+                   "からかい上手の高木さん",
+                   "ラーメン大好き小泉さん",
+                   "りゅうおうのおしごと",
+                   "恋は雨上がりのように",
+                   "メルヘン・メドヘン",
                    "ブラッククローバー",
+                   "グランクレスト戦記",
                    "宇宙よりも遠い場所",
+                   "博多豚骨ラーメンズ",
+                   "ＢＥＡＴＬＥＳＳ",
+                   "キリングバイツ",
                    "スロウスタート",
                    "３月のライオン",
+                   "オーバーロード",
                    "魔法使いの嫁",
+                   "ｃｉｔｒｕｓ",
                    "ゆるキャン",
+                   "刀使ノ巫女",
+                   "封神演義",
+                   "Ｆａｔｅ",
                    "牙狼",
+                   "刻刻",
                   ]
 
+animetitle_short = ["だがしかし",
+                    "たくのみ"]
+
 animetitle_long = list(set(animetitle_long))
-animetitle_short = []
 animetitle = list(set(animetitle_long + animetitle_short))
 
 utf_chs = ['チャンネル:ＴＯＫＹＯ\u3000ＭＸ１\n',
