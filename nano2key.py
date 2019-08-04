@@ -13,7 +13,7 @@ orig_cycle_tune = cycle_tune[:]
 this_ops=True   # OP Skip
 this_eds=True   # ED Skip
 this_lcms=True  # Last CM Skip
-fs_flag = False # Full Screen at Next Chapter
+vlc_flag = False # VLC
 
 cycle_index = 0
 
@@ -70,14 +70,12 @@ def print_config():
         else:
             output += "Not Skip ED nor CM "
     print (output)
-    if fs_flag:
-        print ("Toggle-Full-Screen")
     print ("")
 
 def print_usage():
     print('')
     print('---------------------------------------------------------------------------')
-    print('|NoOP-Skip|NoED-Skip|OnlyED-Skip|OP-CM-tune|Mid-CM-tune|          |Toggle-FS|')
+    print('|NoOP-Skip|NoED-Skip|OnlyED-Skip|OP-CM-tune|Mid-CM-tune|          |MPC / VLC|')
     print('|  1m-ago | 1m-later|1.27-later |2.57-later|  OP-Skip+ | CM-Skip+ |x2.1|x2.8|')
     print('| 10s-ago |10s-later|0.57-later |2.27-later|    Flame  |Flame-Flow|x1.5|x2.5|')
     print('|  3s-ago | 3s-later|0.27-later |1.57-later|  OP-Skip- | CM-Skip- |x1.0|x2.3|')
@@ -114,8 +112,6 @@ isSet = False
 slider = [0,0,0,0,0,0,0,0]
 next_chapter_skip = [0,0,0,0,0,0,0,0]
 
-isFrame = False
-
 def one_min_after():
     pa.hotkey('ctrl', 'right')
 def ten_sec_after():
@@ -124,6 +120,12 @@ def one_min_before():
     pa.hotkey('ctrl', 'left')
 def ten_sec_before():
     pa.hotkey('alt', 'left')
+def mpc_faster(i):
+    for _i in range(i):
+        pa.press(']')
+def mpc_slower(i):
+    for _i in range(i):
+        pa.press('[')     
 
 def skip_time(x):
     min = int(x)
@@ -155,18 +157,12 @@ def op_ed_skip():
 
 while going:
     events = event_get()
-    if isFrame and len(events)==0:
-        pa.press('e')
-        time.sleep(1)
     for e in events:
         if e.type in [QUIT]:
             going = False
         if e.type in [KEYDOWN]:
             going = False
         if e.type in [pygame.midi.MIDIIN]:
-            # print information to console
-            # print ("Ch: " + str(e.data1) + ", Val: " + str(e.data2)+", Ci "+str(cycle_index),cycle_time,sum(next_chapter_skip))
-
             # Hot-Key
             # Start / Pause
             if e.data1 == 41 and e.data2 == 127:
@@ -190,20 +186,15 @@ while going:
                     op_ed_skip()
                 else:
                     cycle_skip()
-                    
             # Next
             if e.data1 == 44 and e.data2 == 127:
                 pa.press('n')
-                if fs_flag:
-                    pa.press('esc')
-                    pa.press('f')
                 skip_tune('+'*sum(next_chapter_skip))
                 cycle_reset()
             # Previous
             if e.data1 == 43 and e.data2 == 127:
                 pa.press('p')
                 cycle_reset()
-                
             # isSet
             if e.data1 == 60:
                 if e.data2 == 127:
@@ -216,14 +207,19 @@ while going:
                 if isSet:
                     pa.press(']')
                 else:
-                    pa.press(';')
+                    if vlc_flag:
+                        pa.press(';')
+                    else:
+                        mpc_faster(10)
             # Slower
             if e.data1 == 61 and e.data2 == 127:
                 if isSet:
                     pa.press('[')
                 else:
-                    pa.press('-')
-                    
+                    if vlc_flag:
+                        pa.press('-')
+                    else:
+                        mpc_slower(10)
             # Volume Up
             if e.data1 == 59 and e.data2 == 127:
                 pa.hotkey('ctrl', 'up')
@@ -234,7 +230,6 @@ while going:
             if e.data1 == 46 and e.data2 == 127:
                 cycle_reset()
                 cycle_tune = orig_cycle_tune
-
             # Skip Time Setting
             # 3 sec before
             if e.data1 == 64 and e.data2 == 127:
@@ -290,7 +285,6 @@ while going:
                 one_min_after()
                 one_min_after()
                 pa.press('pagedown')
-                
             # Speed Settings
             # x1.0
             if e.data1 == 70 and e.data2 == 127:
@@ -298,50 +292,63 @@ while going:
             # x1.5
             if e.data1 == 54 and e.data2 == 127:
                 pa.press('u')
-                pa.press(';')
+                if vlc_flag:
+                    pa.press(';')
+                else:
+                    mpc_faster(5)
             # x2.1
             if e.data1 == 38 and e.data2 == 127:
                 pa.press('u')
-                pa.press(';')
-                pa.press(';')
-                pa.press(']')
+                if vlc_flag:
+                    pa.press(';')
+                    pa.press(';')
+                    pa.press(']')
+                else:
+                    mpc_faster(11)
             # x2.3
             if e.data1 == 71 and e.data2 == 127:
                 pa.press('u')
-                pa.press(';')
-                pa.press(';')
-                pa.press(']')
-                pa.press(']')
-                pa.press(']')
+                if vlc_flag:
+                    pa.press(';')
+                    pa.press(';')
+                    pa.press(']')
+                    pa.press(']')
+                    pa.press(']')
+                else:
+                    mpc_faster(13)
             # x2.5
             if e.data1 == 55 and e.data2 == 127:
                 pa.press('u')
-                pa.press(';')
-                pa.press(';')
-                pa.press(']')
-                pa.press(']')
-                pa.press(']')
-                pa.press(']')
-                pa.press(']')
+                if vlc_flag:
+                    pa.press(';')
+                    pa.press(';')
+                    pa.press(']')
+                    pa.press(']')
+                    pa.press(']')
+                    pa.press(']')
+                    pa.press(']')
+                else:
+                    mpc_faster(15)
             # x2.8
             if e.data1 == 39 and e.data2 == 127:
                 pa.press('u')
-                pa.press(';')
-                pa.press(';')
-                pa.press(';')
-                pa.press('[')
-                pa.press('[')
-
-            # Next Framee
+                if vlc_flag:
+                    pa.press(';')
+                    pa.press(';')
+                    pa.press(';')
+                    pa.press('[')
+                    pa.press('[')
+                else:
+                    mpc_faster(18)
+            # Next Frame
             if e.data1 == 52 and e.data2 == 127:
                 pa.press('e')
             # Frame by Frame
-            if e.data1 == 53:
-                if e.data2 == 127:
-                    isFrame = True
+            if e.data1 == 53 and e.data2 == 127:
+                if vlc_flag:
+                    pass
                 else:
-                    isFrame = False
-
+                    pa.press('q')
             #Not OP Skip
             if e.data1 == 16:
                 if e.data2 == 127:
@@ -407,20 +414,12 @@ while going:
                 else:
                     cm_length[2] = 2.0
                 cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
-            #2 min Mid CM
-            #if e.data1 == 22:
-            #    if e.data2 == 127:
-            #        cm_length[1] = 2.0
-            #        cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)
-            #    elif e.data2 == 0:
-            #        cm_length[1] = 1.0
-            #        cycle_time = set_cycle_time(cml=cm_length, ops=this_ops, eds=this_eds, lcms=this_lcms)  
             #Full Screen at Next Chapter Flag
             if e.data1 == 23:
-                if e.data2 == 127:
-                    fs_flag = True
-                elif e.data2 == 0:
-                    fs_flag = False
+                if e.data2 >= 70:
+                    vlc_flag = True
+                elif e.data2 <= 60:
+                    vlc_flag = False
 
             # OP tune +
             if e.data1 == 36 and e.data2 == 127:
