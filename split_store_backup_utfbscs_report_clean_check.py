@@ -4,35 +4,40 @@ import shutil
 import ctypes
 dll = ctypes.windll.trash
 
-animetitle_long = ["〈物語〉シリーズセレクション",
+animetitle_long = ["通常攻撃が全体攻撃で二回攻撃のお母さんは好きですか",
+                   "可愛ければ変態でも好きになってくれますか",
                    "この世の果てで恋を唄う少女",
+                   "ありふれた職業で世界最強",
                    "世話やきキツネの仙狐さん",
-                   "ぼくたちは勉強ができない",
-                   "真夜中のオカルト公務員",
-                   "八月のシンデレラナイン",
-                   "盾の勇者の成り上がり",
-                   "文豪ストレイドッグス",
-                   "ｒｅｖｉｓｉｏｎｓ",
+                   "荒ぶる季節の乙女どもよ",
+                   "かつて神だった獣たちへ",
+                   "とある科学の一方通行",
+                   "女子高生の無駄づかい",
+                   "ダンベル何キロ持てる",
+                   "異世界チート魔術師",
                    "フルーツバスケット",
-                   "からくりサーカス",
-                   "フェアリーゴーン",
-                   "ひとりぼっちの",
-                   "群青のマグメル",
+                   "ロード・エルメロイ",
+                   "うちの娘の為ならば",
+                   "ヴィンランド・サガ",
+                   "魔王様、リトライ",
+                   "ナカノヒトゲノム",
+                   "彼方のアストラ",
+                   "まちカドまぞく",
+                   "コップクラフト",
+                   "トライナイツ",
+                   "グランベルム",
+                   "炎炎ノ消防隊",
                    "チューズデイ",
-                   "この音とまれ",
-                   "さらざんまい",
-                   "ふたばにめ",
+                   "ＳＴＯＮＥ",
                    "サイコパス",
                    "鬼滅の刃",
-                   "川柳少女",
-                   "消滅都市",
-                   "賢者の孫",
-                   "どろろ",
+                   "ギヴン",
+                   "胡蝶綺",
+                   "ＢＥＭ",
                   ]
 
-animetitle_short = ["八十亀ちゃんかんさつにっき",
-                    "なんでここに先生が",
-                    "異世界かるてっと",]
+animetitle_short = ["手品先輩",
+                    "ソウナンですか",]
 
 animetitle_long = list(set(animetitle_long))
 animetitle = list(set(animetitle_long + animetitle_short))
@@ -132,7 +137,7 @@ for title in animetitle:
 
 for title in animetitle_long:
     for file in os.listdir():
-        if re.search(title+".*\.ts",file) and 2.0 * (1000 ** 3) > os.path.getsize(file):
+        if re.search(title+".*\.ts",file) and 1.6 * (1000 ** 3) > os.path.getsize(file):
             print("Warning : File Size is Small")
             print(file)
             print("End of Warning")
