@@ -33,7 +33,7 @@ class VideoCaptureThreading:
 			grabbed, frame = self.cap.read()
 			with self.read_lock:
 				self.grabbed = grabbed
-				self.frame = frame
+				self.frame = cv2.flip(frame, 1)
 	def read(self):
 		with self.read_lock:
 			frame = self.frame.copy()

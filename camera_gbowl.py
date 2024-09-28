@@ -5,6 +5,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import serial.tools.list_ports
 
+def ball_pos(val):
+	val_a = abs(val)
+	if val_a < 0.2:
+		p = 100 + (136-100)/(0.2-0.0) * (val_a-0.0)
+	elif val_a < 0.3:
+		p = 136 + (154-136)/(0.3-0.2)*(val_a-0.2)
+	elif val_a < 0.4:
+		p = 154 + (173-154)/(0.4-0.3)*(val_a-0.3)
+	else:
+		p = 173 + (200-173)/(1.0-0.4)*(val_a-0.4)
+	return max(min(p-100, 100), 0)
+
 def g_scale(val):
 	val_a = abs(val)
 	if val_a < 0.05:
@@ -114,9 +126,10 @@ if __name__ == "__main__":
 	fig.patch.set_facecolor('black')
 	fig.canvas.toolbar.pack_forget()
 	fig.canvas.manager.full_screen_toggle()
-	ax1 = plt.subplot2grid((3, 2), (0, 0), rowspan=2)
-	ax2 = plt.subplot2grid((3, 2), (0, 1), rowspan=2)
-	ax3 = plt.subplot2grid((3, 2), (2, 0), colspan=2)
+	ax1 = plt.subplot2grid((3, 10), (0, 0), rowspan=2, colspan=5)
+	ax2 = plt.subplot2grid((3, 10), (0, 5), rowspan=2, colspan=5)
+	ax3 = plt.subplot2grid((3, 10), (2, 2), colspan=8)
+	ax4 = plt.subplot2grid((3, 10), (2, 0), colspan=2)
 	ax1.patch.set_facecolor('black')
 	ax2.patch.set_facecolor('black')
 	ax3.patch.set_facecolor('black')
@@ -156,6 +169,14 @@ if __name__ == "__main__":
 	ax3.text(x_txt, -0.59, '-0.2G', color='#FF69B4', size=s_txt)
 	ax3.text(x_txt, -0.79, '-0.3G', color='#FF0000', size=s_txt)
 	
+	ax4.patch.set_facecolor('black')
+	ax4.set_aspect('equal', adjustable='box')
+	ax4.axes.get_xaxis().set_visible(False)
+	ax4.axes.get_yaxis().set_visible(False)
+	img = plt.imread("C:/Users/user/bg_orig_200.png")
+	im = ax4.imshow(img)
+	pos1, = ax4.plot([100.0], [100.0], 'o', ms=40, color='#FFBF00')
+
 	cap1 = VideoCaptureThreading(2)
 	cap1.start()
 	ret, frame = cap1.read()
@@ -183,4 +204,8 @@ if __name__ == "__main__":
 		y_y = np.hstack((y_y[1:], np.array([g_scale(Ay)])))
 		lines_x.set_data(x_t, y_x)
 		lines_y.set_data(x_t, y_y)
+		A = np.sqrt(Ax*Ax + Ay*Ay)
+		theta = np.arctan2(Ax, Ay)
+		A_pos = ball_pos(A)
+		pos1.set_data([A_pos*np.cos(theta) + 100.0], [A_pos*np.sin(theta) + 100.0])
 		plt.pause(0.001)
