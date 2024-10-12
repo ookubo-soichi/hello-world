@@ -86,10 +86,16 @@ if __name__ == "__main__":
 	imu = IMUCaptureThreading(com)
 	imu.start()
 	
+	pos_x = 200; pos_y = 200;
+	coef = 1.0
 	while True:
 		Ax, Ay = imu.read()
 		A = np.sqrt(Ax*Ax + Ay*Ay)
 		theta = np.arctan2(Ax, Ay)
 		A_pos = ball_pos(A)
-		pos1.set_data([A_pos*np.cos(theta) + 200.0], [A_pos*np.sin(theta) + 200.0])
+		pos_x_current = A_pos*np.cos(theta) + 200.0
+		pos_y_current = A_pos*np.sin(theta) + 200.0
+		pos_x = coef*pos_x_current + (1-coef)*pos_x
+		pos_y = coef*pos_y_current + (1-coef)*pos_y
+		pos1.set_data([pos_x], [pos_y])
 		plt.pause(0.001)

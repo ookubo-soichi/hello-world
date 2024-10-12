@@ -12,8 +12,8 @@ class VideoCaptureThreading:
 	def __init__(self, src):
 		self.cap = cv2.VideoCapture(src)
 		self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('H', '2', '6', '4'))
-		self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-		self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+		self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600)
+		self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
 		self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 		self.grabbed, self.frame = self.cap.read()
 		self.started = False
@@ -33,7 +33,7 @@ class VideoCaptureThreading:
 			grabbed, frame = self.cap.read()
 			with self.read_lock:
 				self.grabbed = grabbed
-				self.frame = cv2.flip(frame, 1)
+				self.frame = frame
 	def read(self):
 		with self.read_lock:
 			frame = self.frame.copy()
