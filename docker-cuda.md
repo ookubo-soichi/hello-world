@@ -94,3 +94,53 @@ exec "$@"
 `docker exec -it cuda10.2-container bash`
 
 `docker exec -it -u root cuda10.2-container bash`
+
+### bf
+```
+docker run --gpus all --name bevformer2  --shm-size=2gb --net=host -v /path/to/data:/workspace/data -it nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04 bash
+docker exec -i -t bevformer2 bash
+export DISPLAY=":1"
+
+apt-get update
+apt -y install wget
+apt -y install git
+apt -y install libopencv-dev
+
+mkdir -p /home/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /home/miniconda3/miniconda.sh
+bash /home/miniconda3/miniconda.sh -b -u -p /home/miniconda3/
+
+/home/miniconda3/bin/conda init bash
+bash
+
+conda create -n bevf python=3.8 -y
+conda activate bevf
+
+pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
+
+git clone https://github.com/fundamentalvision/BEVFormer.git /workspace/bevformer
+ln -s /workspace/data/ /workspace/bevformer/
+conda install -c omgarcia gcc-6
+pip install mmcv-full==1.4.0
+pip install mmdet==2.14.0
+pip install mmsegmentation==0.14.1
+
+pip uninstall opencv-python
+pip install opencv-python-headless
+
+git clone https://github.com/open-mmlab/mmdetection3d.git
+cd mmdetection3d
+git checkout v0.17.1
+pip install -r requirements/runtime.txt
+python setup.py install
+
+python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+
+pip install einops fvcore seaborn iopath==0.1.9 timm==0.6.13 typing-extensions==4.5.0 pylint ipython==8.12 numpy==1.19.5 matplotlib==3.5.2 numba==0.48.0 pandas==1.4.4 scikit-image==0.19.3 setuptools==59.5.0
+
+cd /workspace/bevformer
+mkdir ckpts
+cd ckpts
+wget https://github.com/zhiqi-li/storage/releases/download/v1.0/bevformer_tiny_epoch_24.pth
+./tools/dist_test.sh ./projects/configs/bevformer/bevformer_tiny.py ./ckpts/bevformer_tiny_epoch_24.pth 1
+```
