@@ -204,3 +204,27 @@ import torch
 print(torch.backends.cudnn.enabled)       # → True
 print(torch.backends.cudnn.version())     # → 8600 など
 ```
+
+```
+# 1. .deb ファイルのインストール
+sudo dpkg -i nv-tensorrt-local-repo-ubuntu2204-8.6.1-cuda-11.8_1.0-1_amd64.deb
+
+# 2. GPGキーの登録
+sudo cp /var/nv-tensorrt-local-repo-*/nv-tensorrt-*-keyring.gpg /usr/share/keyrings/
+
+sudo mv /etc/apt//sources.list.d/cuda-ubuntu2204-x86_64.list /etc/apt//sources.list.d/cuda-ubuntu2204-x86_64.list.disabled
+sudo apt clean
+sudo apt update
+
+sudo apt install -y   tensorrt=8.6.1.6-1+cuda11.8   libnvinfer-dev=8.6.1.6-1+cuda11.8   libnvinfer-plugin-dev=8.6.1.6-1+cuda11.8   python3-libnvinfer-dev=8.6.1.6-1+cuda11.8   python3-libnvinfer=8.6.1.6-1+cuda11.8   libnvparsers-dev=8.6.1.6-1+cuda11.8   libnvonnxparsers-dev=8.6.1.6-1+cuda11.8   uff-converter-tf=8.6.1.6-1+cuda11.8   onnx-graphsurgeon=8.6.1.6-1+cuda11.8   graphsurgeon-tf=8.6.1.6-1+cuda11.8   libnvinfer8=8.6.1.6-1+cuda11.8   libnvinfer-plugin8=8.6.1.6-1+cuda11.8   libnvinfer-vc-plugin8=8.6.1.6-1+cuda11.8   libnvinfer-headers-dev=8.6.1.6-1+cuda11.8   libnvinfer-headers-plugin-dev=8.6.1.6-1+cuda11.8   libnvinfer-lean8=8.6.1.6-1+cuda11.8   libnvinfer-dispatch8=8.6.1.6-1+cuda11.8   libnvinfer-lean-dev=8.6.1.6-1+cuda11.8   libnvinfer-dispatch-dev=8.6.1.6-1+cuda11.8   libnvinfer-vc-plugin-dev=8.6.1.6-1+cuda11.8   python3-libnvinfer-lean=8.6.1.6-1+cuda11.8   python3-libnvinfer-dispatch=8.6.1.6-1+cuda11.8   libnvinfer-bin=8.6.1.6-1+cuda11.8   libnvinfer-samples=8.6.1.6-1+cuda11.8
+
+
+export TRT_ROOT=/usr/lib/x86_64-linux-gnu
+export PATH=$PATH:$TRT_ROOT
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRT_ROOT
+export PYTHONPATH=$PYTHONPATH:/usr/lib/python3.10/dist-packages
+
+import tensorrt as trt
+print(trt.__version__)  # → 8.6.x であることを確認
+
+```
